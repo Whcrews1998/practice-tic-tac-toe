@@ -6,6 +6,12 @@
 
 html,
 body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(to bottom, #e0e0e0, #a0d8ef);
+
   min-height: 100vh;
   min-width: 100vw;
 }
