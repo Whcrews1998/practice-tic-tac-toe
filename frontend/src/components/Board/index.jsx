@@ -1,19 +1,31 @@
 import {useState} from "react";
 import style from "./board.module.css";
 
+let currentPlayer = "X";
+
 export default function Board() {
-  const currentPlayer = "X";
 
   const [board, setBoard] = useState(new Array(9).fill(null));
 
   function displayBoard() {
     return board.map( (value, index) => {
       return (
-        <div key={index} className={style["square"]}>
+        <div key={index} className={style["square"]} onClick={() => tickTile(index)}>
           {value}
         </div>
       );
     })
+  }
+
+  function tickTile(index) {
+    if (board[index] !== null) return;
+
+    const newBoard = structuredClone(board);
+    newBoard[index] = currentPlayer;
+
+    currentPlayer = (currentPlayer === "X") ? "O" : "X";
+    setBoard(newBoard);
+    return;
   }
 
   return (
@@ -21,15 +33,6 @@ export default function Board() {
       <p className={style["title"]}> Tic-Tac-Toe </p>
       <div className={style["board"]}>
         {displayBoard()}
-        {/* <div className={`${style["square"]}`}>{board[0]}</div> */}
-        {/* <div className={`${style["square"]}`}>{board[1]}</div> */}
-        {/* <div className={`${style["square"]}`}>{board[2]}</div> */}
-        {/* <div className={`${style["square"]}`}>{board[3]}</div> */}
-        {/* <div className={`${style["square"]}`}>{board[4]}</div> */}
-        {/* <div className={`${style["square"]}`}>{board[5]}</div> */}
-        {/* <div className={`${style["square"]}`}>{board[6]}</div> */}
-        {/* <div className={`${style["square"]}`}>{board[7]}</div> */}
-        {/* <div className={`${style["square"]}`}>{board[8]}</div> */}
       </div>
     </div>
   );
