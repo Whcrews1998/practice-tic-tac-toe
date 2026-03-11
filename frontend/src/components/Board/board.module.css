@@ -24,6 +24,9 @@
 }
 
 .square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid black;
   background-color: white;
 }
