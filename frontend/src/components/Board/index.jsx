@@ -1,10 +1,11 @@
 import {useState, useEffect} from "react";
 import style from "./board.module.css";
 
-let currentPlayer = "X";
 
 export default function Board() {
 
+  const [currentPlayer, setCurrentPlayer] = useState("X");
+  const [gameOver, setGameOver] = useState(false);
   const [board, setBoard] = useState(new Array(9).fill(null));
 
   function displayBoard() {
@@ -30,24 +31,24 @@ export default function Board() {
     ];
 
 
+
     let hasWon = false;
     for (let val of winningPatterns) {
-      const [a, b, c] = val;      
+      const [a, b, c] = val;
       if (board[a] == null || board[b] == null || board[c] ==null)
         continue;
       if (board[a] === board[b] && board[b] === board[c])
         hasWon = true;
     }
 
-    // Check if winner found.
     if (hasWon) {
-      alert("Winner!");
+      setGameOver(true);
       return;
     }
-    // Check if all tiles are uses up.
-    if (!board.includes(null)) {
-      alert("Tie!");
-    }
+
+    setCurrentPlayer((currentPlayer === "X") ? "O" : "X");
+
+
   }
 
   useEffect(() => {
@@ -55,20 +56,26 @@ export default function Board() {
   }, [board]);
 
   async function tickTile(index) {
+    if (gameOver) return;
     if (board[index] !== null) return;
 
     const newBoard = structuredClone(board);
     newBoard[index] = currentPlayer;
 
-    currentPlayer = (currentPlayer === "X") ? "O" : "X";
     setBoard(newBoard);
 
     return;
   }
 
   function resetGame() {
+    setGameOver(false);
     setBoard(new Array(9).fill(null));
-    currentPlayer = "X";
+    setCurrentPlayer("X");
+  }
+
+  function gameStatus() {
+    if (gameOver) return "Player " + currentPlayer + " won!";
+    else return "Player " + currentPlayer + "'s turn.";
   }
 
   return (
@@ -77,7 +84,7 @@ export default function Board() {
       <div className={style["board"]}>
         {displayBoard()}
       </div>
-      <p> Player {currentPlayer}'s Turn</p>
+      <p className={style["playerTurn"]}>{gameStatus()}</p>
       <button type="button" onClick={resetGame}>Reset Game</button>
     </div>
   );
